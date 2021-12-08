@@ -1,6 +1,6 @@
 public class Player {
   private PVector pos, vel;
-  private final int SPEED = 5, SIZE = 20;
+  private final int SPEED = 2, SIZE = 30;
   
   
   public Player(int x, int y) {
@@ -9,7 +9,8 @@ public class Player {
   }
   
   public void show() {
-    fill(pos.x/2,pos.y/2,mouseX/width + mouseY/2);
+    noStroke();
+    fill(0,0,0);
     circle(pos.x,pos.y,SIZE);
   }
   
@@ -21,6 +22,12 @@ public class Player {
   public boolean canMove() {
     boolean canMove;
     PVector newPos = PVector.add(pos, vel);
-    return true;
+    if (newPos.x + SIZE > width || newPos.x < SIZE + 5 || newPos.y + SIZE > height || newPos.y < SIZE + 5) {
+      canMove = false;
+    }
+    else {
+      canMove = true;
+    }
+    return canMove;
   }
-}
+  }
