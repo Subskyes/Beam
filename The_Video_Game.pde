@@ -1,38 +1,42 @@
 Player player; //<>//
-Enemy[] enemies = new Enemy[10];
+Enemy[] enemies= new Enemy[200];
+Obst obst;
 Laser[] lasers = new Laser[30000];
 int lasersFired = 0;
+int enemiesSpawned = 0;
 int round = 30000;
 LSight lsight;
 
 public void setup() {
   size(1200, 800);
-  player = new Player(width/2, height/2);
+  player = new Player(width/2,height/2);
   lsight = new LSight(player.pos.copy());
-  spawnEnemies();
-  frameRate(240);
+  obst = new Obst(width/2-50,100);
+  frameRate(90);
 }
 
 public void draw() {
-  background(100, 100, 100);
+  background(player.pos.x/4, 0, 0);
   player.move();
   player.show();
+  obst.show();
   lsight.show();
+  if(frameCount % 30 == 0) spawnEnemies(); 
   for (int i = 0; i < enemies.length; i++) {
-    if (enemies[i].hp > 0){
-    enemies[i].show();
+    if (enemies[i] !=null && (enemies[i].active || enemies[i].hp > 0)){
+    enemies[i].show(); //<>//
     enemies[i].move();
     }
 
     for (int j = 0; j < lasers.length; j++) {
-      if (lasers[i] != null && lasers[i].active) {
-        Enemy oneE = enemies[j];
+      if (enemies[i] !=null && lasers[j] != null && lasers[j].active) {
+        Enemy oneE = enemies[i];
         if (oneE.active)
-          lasers[i].collides(oneE);
+          lasers[j].collides(oneE);
       }
     }
   }
-  if (mousePressed && lasersFired < round) fireLaser();
+  if (mousePressed && frameCount % 5 == 0) fireLaser();
   for (int i = 0; i < lasers.length; i++) {
     if (lasers[i] != null && lasers[i].active) {
       lasers[i].show();
@@ -110,7 +114,10 @@ public void fireLaser() {
   lasersFired++;
 }
 private void spawnEnemies() {
-  for (int i = 0; i < enemies.length; i++) {
-    enemies[i] = new Enemy((int)(Math.random()*height), width);
-  }
+ Enemy enemy = new Enemy(obst.pos.x+50,obst.pos.y+50);
+  enemies[enemiesSpawned] = enemy;
+  enemiesSpawned++;
+    
+    
+  
 }
